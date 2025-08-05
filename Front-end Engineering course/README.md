@@ -106,6 +106,7 @@ I'll keep it clear and realistic so you can actually *follow and adjust* if need
 | 42 | SEO Best Practices for React Apps |
 
 ---
+-- Adding working with AI
 
 # 🏗️ **Final 6–8 Weeks: Capstone Project Execution**
 
