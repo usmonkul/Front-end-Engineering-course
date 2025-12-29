@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Challenge 3: Sayohat Kartalari</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1>✈️ Sayohat Kartalari</h1>
+            <p class="subtitle">DOM manipulation va Import/Export</p>
+        </header>
+
+        <div class="info-box">
+            <h2>📋 Vazifa:</h2>
+            <ol>
+                <li><code>data.js</code> dan ma'lumotlarni import qiling</li>
+                <li>Har bir sayohat uchun kartochka yarating</li>
+                <li>1000$ dan arzon sayohatlarni yashil fon bilan ajrating</li>
+                <li>Rating 4.7+ bo'lgan sayohatlarni oltin ramka bilan ajrating</li>
+                <li>Dinamik ravishda DOMga qo'shing</li>
+            </ol>
+        </div>
+
+        <div class="controls">
+            <button id="all-btn" class="control-btn active">🌍 Barchasi</button>
+            <button id="cheap-btn" class="control-btn">💰 Arzon sayohatlar</button>
+            <button id="popular-btn" class="control-btn">⭐ Eng mashhur</button>
+            <button id="sort-price-btn" class="control-btn">📊 Narx bo'yicha</button>
+            <button id="cheapest-btn" class="control-btn bonus">🏆 Eng arzon</button>
+        </div>
+
+        <div class="stats">
+            <div class="stat-card">
+                <div class="stat-number" id="total-trips">0</div>
+                <div class="stat-label">Jami sayohatlar</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="cheap-count">0</div>
+                <div class="stat-label">Arzon sayohatlar</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="avg-price">$0</div>
+                <div class="stat-label">O'rtacha narx</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="best-rating">0</div>
+                <div class="stat-label">Eng yuqori rating</div>
+            </div>
+        </div>
+
+        <div id="trips-container" class="trips-grid">
+            <!-- JavaScript orqali sayohat kartalari bu yerga qo'shiladi -->
+        </div>
+
+        <div class="console-output">
+            <h3>📺 Console natijalar:</h3>
+            <div id="console-log">
+                <!-- Console natijalari bu yerda ko'rsatiladi -->
+            </div>
+        </div>
+    </div>
+
+    <script type="module" src="main.js"></script>
+</body>
+</html>

@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Challenge 4: Fetch API - Real Products</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1>🛍️ Real Mahsulotlar</h1>
+            <p class="subtitle">Fetch API bilan DummyJSON dan ma'lumot olish</p>
+        </header>
+
+        <div class="info-box">
+            <h2>📋 Vazifa:</h2>
+            <ol>
+                <li><code>fetch</code> bilan <code>https://dummyjson.com/products</code> dan ma'lumot oling</li>
+                <li>Har bir mahsulot uchun kartochka yarating</li>
+                <li>Faqat birinchi 12 ta mahsulotni ko'rsating</li>
+                <li>50$ dan yuqori mahsulotlarga "Premium" belgisi qo'shing</li>
+                <li>"Ko'proq yuklash" tugmasi bilan qolgan mahsulotlarni ko'rsating</li>
+            </ol>
+        </div>
+
+        <div class="loading" id="loading">
+            <div class="spinner"></div>
+            <p>Ma'lumotlar yuklanmoqda...</p>
+        </div>
+
+        <div class="controls" id="controls" style="display: none;">
+            <button id="load-btn" class="control-btn">📥 Ma'lumot yuklash</button>
+            <button id="filter-premium-btn" class="control-btn">👑 Premium mahsulotlar</button>
+            <button id="filter-beauty-btn" class="control-btn">💄 Go'zallik</button>
+            <button id="filter-electronics-btn" class="control-btn">📱 Elektronika</button>
+            <button id="load-more-btn" class="control-btn load-more" style="display: none;">➕ Ko'proq yuklash</button>
+            <button id="reset-btn" class="control-btn reset">🔄 Qayta tiklash</button>
+        </div>
+
+        <div class="stats" id="stats" style="display: none;">
+            <div class="stat-card">
+                <div class="stat-number" id="total-products">0</div>
+                <div class="stat-label">Jami mahsulotlar</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="displayed-products">0</div>
+                <div class="stat-label">Ko'rsatilgan</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="premium-count">0</div>
+                <div class="stat-label">Premium mahsulotlar</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="avg-price">$0</div>
+                <div class="stat-label">O'rtacha narx</div>
+            </div>
+        </div>
+
+        <div id="products-container" class="products-grid">
+            <!-- JavaScript orqali mahsulot kartalari bu yerga qo'shiladi -->
+        </div>
+
+        <div class="modal" id="product-modal">
+            <div class="modal-content">
+                <span class="close" id="close-modal">&times;</span>
+                <div id="modal-body">
+                    <!-- Modal content -->
+                </div>
+            </div>
+        </div>
+
+        <div class="console-output">
+            <h3>📺 Console natijalar:</h3>
+            <div id="console-log">
+                <!-- Console natijalari bu yerda ko'rsatiladi -->
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
