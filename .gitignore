@@ -6,3 +6,9 @@ flex.html
 test.md
 interactive-particles.html
 Js_readme.md
+
+.vscode
+node_modules
+.git
+.DS_Store
+Thumbs.db
