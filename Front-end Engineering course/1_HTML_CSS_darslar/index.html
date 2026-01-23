@@ -1,0 +1,536 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Position: static, relative, absolute, fixed</title>
+    <style>
+      :root {
+        --bg: #0b1020;
+        --panel: #111a33;
+        --text: #e8eeff;
+        --muted: #b6c2ff;
+        --border: rgba(255, 255, 255, 0.12);
+        --accent: #7c5cff;
+        --accent2: #22c55e;
+        --warn: #ffb020;
+        --danger: #ff4d6d;
+        --shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
+        --radius: 14px;
+        --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
+          "Liberation Mono", "Courier New", monospace;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        font-family: system-ui, -apple-system, Segoe UI, Roboto, Helvetica,
+          Arial, "Apple Color Emoji", "Segoe UI Emoji";
+        background: radial-gradient(
+            1200px 600px at 20% 0%,
+            rgba(124, 92, 255, 0.25),
+            transparent 60%
+          ),
+          radial-gradient(
+            900px 500px at 100% 20%,
+            rgba(34, 197, 94, 0.18),
+            transparent 60%
+          ),
+          var(--bg);
+        color: var(--text);
+        line-height: 1.55;
+      }
+
+      .container {
+        max-width: 1100px;
+        margin: 0 auto;
+        padding: 28px 18px 80px;
+      }
+
+      header {
+        padding: 18px 18px;
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        background: linear-gradient(
+          180deg,
+          rgba(255, 255, 255, 0.06),
+          rgba(255, 255, 255, 0.03)
+        );
+        box-shadow: var(--shadow);
+      }
+
+      h1 {
+        margin: 0 0 8px;
+        font-size: 28px;
+        letter-spacing: 0.2px;
+      }
+
+      .subtitle {
+        margin: 0;
+        color: var(--muted);
+        font-size: 14px;
+      }
+
+      .grid {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 16px;
+        margin-top: 16px;
+      }
+
+      @media (min-width: 980px) {
+        .grid {
+          grid-template-columns: 1fr 1fr;
+        }
+      }
+
+      section.lesson {
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        background: rgba(255, 255, 255, 0.04);
+        box-shadow: var(--shadow);
+        overflow: hidden;
+      }
+
+      .lesson .head {
+        padding: 14px 16px;
+        border-bottom: 1px solid var(--border);
+        background: rgba(255, 255, 255, 0.03);
+        display: flex;
+        align-items: baseline;
+        justify-content: space-between;
+        gap: 12px;
+      }
+
+      .lesson h2 {
+        margin: 0;
+        font-size: 18px;
+      }
+
+      .tag {
+        font-family: var(--mono);
+        font-size: 12px;
+        padding: 6px 8px;
+        border-radius: 999px;
+        border: 1px solid var(--border);
+        color: var(--muted);
+        background: rgba(0, 0, 0, 0.18);
+      }
+
+      .content {
+        padding: 14px 16px 16px;
+      }
+
+      .content p {
+        margin: 0 0 10px;
+      }
+
+      .content ul {
+        margin: 8px 0 12px 18px;
+      }
+
+      .note {
+        border-left: 3px solid var(--warn);
+        padding: 10px 12px;
+        border-radius: 10px;
+        background: rgba(255, 176, 32, 0.12);
+        margin: 12px 0;
+      }
+
+      .good {
+        border-left-color: var(--accent2);
+        background: rgba(34, 197, 94, 0.12);
+      }
+
+      .danger {
+        border-left-color: var(--danger);
+        background: rgba(255, 77, 109, 0.12);
+      }
+
+      .code {
+        font-family: var(--mono);
+        font-size: 12.5px;
+        border: 1px solid var(--border);
+        background: rgba(0, 0, 0, 0.26);
+        border-radius: 12px;
+        padding: 12px;
+        overflow: auto;
+        margin: 10px 0 0;
+      }
+
+      .demo {
+        margin-top: 12px;
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        background: rgba(0, 0, 0, 0.18);
+        padding: 12px;
+      }
+
+      .demo-title {
+        margin: 0 0 8px;
+        font-size: 12px;
+        color: var(--muted);
+      }
+
+      .stage {
+        position: relative;
+        height: 160px;
+        border-radius: 10px;
+        border: 1px dashed rgba(255, 255, 255, 0.18);
+        background: linear-gradient(
+            0deg,
+            rgba(255, 255, 255, 0.04),
+            rgba(255, 255, 255, 0.04)
+          ),
+          repeating-linear-gradient(
+            90deg,
+            rgba(255, 255, 255, 0.05) 0,
+            rgba(255, 255, 255, 0.05) 1px,
+            transparent 1px,
+            transparent 24px
+          ),
+          repeating-linear-gradient(
+            0deg,
+            rgba(255, 255, 255, 0.05) 0,
+            rgba(255, 255, 255, 0.05) 1px,
+            transparent 1px,
+            transparent 24px
+          );
+        overflow: hidden;
+      }
+
+      .box {
+        width: 120px;
+        height: 52px;
+        border-radius: 12px;
+        display: grid;
+        place-items: center;
+        font-weight: 700;
+        letter-spacing: 0.2px;
+        border: 1px solid rgba(255, 255, 255, 0.18);
+        box-shadow: 0 10px 18px rgba(0, 0, 0, 0.25);
+      }
+
+      .box.a {
+        background: rgba(124, 92, 255, 0.25);
+      }
+
+      .box.b {
+        background: rgba(34, 197, 94, 0.25);
+      }
+
+      .box.c {
+        background: rgba(255, 176, 32, 0.25);
+      }
+
+      .row {
+        display: flex;
+        gap: 10px;
+        padding: 10px;
+        flex-wrap: wrap;
+        align-items: flex-start;
+      }
+
+      /* ===== Demo behaviors ===== */
+      .demo-static .box.b {
+        /* static: top/left ishlamaydi */
+        position: static;
+        top: 20px;
+        left: 20px;
+      }
+
+      .demo-relative .box.b {
+        position: relative;
+        top: 18px;
+        left: 18px;
+      }
+
+      .demo-absolute .stage {
+        position: relative; /* absolute element uchun konteyner */
+      }
+      .demo-absolute .box.b {
+        position: absolute;
+        top: 16px;
+        right: 16px;
+      }
+
+      .demo-fixed .box.b {
+        position: fixed;
+        bottom: 18px;
+        right: 18px;
+        z-index: 10;
+      }
+
+      .scroll-hint {
+        margin-top: 10px;
+        font-size: 12px;
+        color: var(--muted);
+      }
+
+      .spacer {
+        height: 120px;
+        border-radius: 12px;
+        border: 1px dashed rgba(255, 255, 255, 0.14);
+        background: rgba(0, 0, 0, 0.12);
+        margin-top: 10px;
+        display: grid;
+        place-items: center;
+        color: rgba(255, 255, 255, 0.65);
+        font-size: 12px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <header>
+        <h1>CSS `position` — static, relative, absolute, fixed</h1>
+        <p class="subtitle">
+          Ushbu sahifa — dars o‘tish uchun tayyor template. Har bir bo‘limda:
+          qisqa nazariya + demo + ko‘p uchraydigan xatolar va mini-vazifa.
+        </p>
+      </header>
+
+      <div class="grid">
+        <section class="lesson">
+          <div class="head">
+            <h2>1) `position: static` (default)</h2>
+            <span class="tag">default</span>
+          </div>
+          <div class="content">
+            <p>
+              <b>Static</b> — elementning standart holati. Element normal oqimda
+              (normal flow) joylashadi.
+            </p>
+            <ul>
+              <li>
+                <b>`top/right/bottom/left` ishlamaydi</b> (ta’sir qilmaydi).
+              </li>
+              <li>
+                Element boshqa elementlarni “itarmaydi” yoki ustiga chiqmaydi —
+                hammasi oddiy oqimda bo‘ladi.
+              </li>
+            </ul>
+
+            <div class="note good">
+              <b>O‘qituvchi eslatma:</b> talabalar ko‘pincha `top: 20px` yozib
+              “nega yurmayapti?” deydi. Sababi: element `position: static`.
+            </div>
+
+            <div class="demo demo-static">
+              <p class="demo-title">
+                DEMO: `top/left` berilgan, lekin static bo‘lgani uchun
+                o‘zgarmaydi
+              </p>
+              <div class="stage">
+                <div class="row">
+                  <div class="box a">A</div>
+                  <div class="box b">B</div>
+                  <div class="box c">C</div>
+                </div>
+              </div>
+            </div>
+
+            <pre class="code">
+.box.b {
+  position: static;
+  top: 20px;   /* ishlamaydi */
+  left: 20px;  /* ishlamaydi */
+}</pre
+            >
+          </div>
+        </section>
+
+        <section class="lesson">
+          <div class="head">
+            <h2>2) `position: relative`</h2>
+            <span class="tag">offset + anchor</span>
+          </div>
+          <div class="content">
+            <p>
+              <b>Relative</b> — element normal oqimda qoladi, lekin
+              `top/left/right/bottom` bilan o‘z joyidan “siljiydi”.
+            </p>
+            <ul>
+              <li>`top/left/...` ishlaydi.</li>
+              <li>
+                Elementning “asl joyi” saqlanib qoladi (bo‘sh joy qoladi).
+              </li>
+              <li>
+                Ko‘pincha `absolute` elementlar uchun <b>konteyner</b> qilishda
+                ishlatiladi.
+              </li>
+            </ul>
+
+            <div class="demo demo-relative">
+              <p class="demo-title">
+                DEMO: B blok `relative` bo‘lib pastga/chapga siljiydi
+              </p>
+              <div class="stage">
+                <div class="row">
+                  <div class="box a">A</div>
+                  <div class="box b">B</div>
+                  <div class="box c">C</div>
+                </div>
+              </div>
+            </div>
+
+            <pre class="code">
+.box.b {
+  position: relative;
+  top: 18px;
+  left: 18px;
+}</pre
+            >
+
+            <div class="note">
+              <b>Mini-vazifa:</b> `top`ni `-18px` qilib ko‘ring. B qaysi tomonga
+              ketadi?
+            </div>
+          </div>
+        </section>
+
+        <section class="lesson">
+          <div class="head">
+            <h2>3) `position: absolute`</h2>
+            <span class="tag">out of flow</span>
+          </div>
+          <div class="content">
+            <p>
+              <b>Absolute</b> — element normal oqimdan chiqadi (out of flow) va
+              eng yaqin <b>position berilgan ancestor</b>ga nisbatan joylashadi.
+            </p>
+            <ul>
+              <li>
+                Ko‘pincha badge, icon, dropdown, tooltip, modal elementlar
+                uchun.
+              </li>
+              <li>
+                Agar parent’da `position: relative` (yoki
+                `absolute/fixed/sticky`) bo‘lmasa, u holda viewportga (sahifaga)
+                nisbatan joylashishi mumkin.
+              </li>
+            </ul>
+
+            <div class="note danger">
+              <b>Eng ko‘p xato:</b> parent’ga `position: relative` berilmasa,
+              `absolute` element “kutilmagan joy”ga ketadi.
+            </div>
+
+            <div class="demo demo-absolute">
+              <p class="demo-title">
+                DEMO: B blok sahna (stage) ichida yuqori o‘ngga “yopishadi”
+              </p>
+              <div class="stage">
+                <div class="row">
+                  <div class="box a">A</div>
+                  <div class="box c">C</div>
+                </div>
+                <div class="box b">B</div>
+              </div>
+            </div>
+
+            <pre class="code">
+.stage { position: relative; }
+
+.box.b {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+}</pre
+            >
+
+            <div class="note">
+              <b>Mini-vazifa:</b> `right: 16px` o‘rniga `left: 16px` qilib
+              ko‘ring.
+            </div>
+          </div>
+        </section>
+
+        <section class="lesson">
+          <div class="head">
+            <h2>4) `position: fixed`</h2>
+            <span class="tag">viewport</span>
+          </div>
+          <div class="content">
+            <p>
+              <b>Fixed</b> — element viewportga (brauzer oynasiga) nisbatan
+              joylashadi. Sahifani scroll qilsangiz ham joyida turadi.
+            </p>
+            <ul>
+              <li>
+                Ko‘pincha sticky CTA, “back to top” button, chat widget, fixed
+                navbar uchun.
+              </li>
+              <li>Ko‘pincha `z-index` kerak bo‘ladi (ustida turishi uchun).</li>
+            </ul>
+
+            <div class="demo demo-fixed">
+              <p class="demo-title">
+                DEMO: B blok sahifaning past-o‘ng burchagiga fixed
+              </p>
+              <div class="stage">
+                <div class="row">
+                  <div class="box a">A</div>
+                  <div class="box c">C</div>
+                </div>
+                <div class="spacer">
+                  Scroll qilish uchun joy (pastga tushing)
+                </div>
+              </div>
+              <p class="scroll-hint">
+                Pastga scroll qiling — B blok joyida qoladi.
+              </p>
+            </div>
+
+            <pre class="code">
+.box.b {
+  position: fixed;
+  bottom: 18px;
+  right: 18px;
+  z-index: 10;
+}</pre
+            >
+
+            <div class="note">
+              <b>Mini-vazifa:</b> `bottom`ni `80px` qiling. Element qayerga
+              ko‘chdi?
+            </div>
+          </div>
+        </section>
+      </div>
+
+      <section class="lesson" style="margin-top: 16px">
+        <div class="head">
+          <h2>Cheat sheet (dars yakuni)</h2>
+          <span class="tag">quick recap</span>
+        </div>
+        <div class="content">
+          <ul>
+            <li><b>static</b>: default, `top/left` ishlamaydi.</li>
+            <li>
+              <b>relative</b>: oqimda qoladi, o‘z joyidan siljiydi, ko‘pincha
+              absolute uchun konteyner.
+            </li>
+            <li>
+              <b>absolute</b>: oqimdan chiqadi, eng yaqin position’li parent’ga
+              nisbatan joylashadi.
+            </li>
+            <li>
+              <b>fixed</b>: viewportga nisbatan, scroll qilsangiz ham joyida
+              qoladi.
+            </li>
+          </ul>
+
+          <div class="note good">
+            <b>Uyga vazifa g‘oya:</b> 1 ta card yarating. Card ichida “SALE”
+            badge bo‘lsin (absolute). Past-o‘ngda “Help” tugmasi bo‘lsin
+            (fixed).
+          </div>
+        </div>
+      </section>
+    </div>
+  </body>
+</html>
