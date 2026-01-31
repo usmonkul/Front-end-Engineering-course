@@ -12,3 +12,5 @@ node_modules
 .git
 .DS_Store
 Thumbs.db
+node_modules
+promt.md
