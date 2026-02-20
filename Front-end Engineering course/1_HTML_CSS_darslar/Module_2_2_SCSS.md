@@ -1,851 +1,488 @@
-<details>
-<summary>SCSS</summary>
----
+# SCSS — Asosiy kurs (O‘zbekcha)
 
-> 💡 SCSS (Sassy CSS) is a **CSS preprocessor** that adds powerful features to plain CSS: variables, nesting, functions, mixins, loops, conditions, and more.
+> **SCSS (Sassy CSS)** — CSS preprocessor. Oddiy CSS ga o‘zgaruvchilar, nesting, mixinlar, funksiyalar va modulli tuzilma qo‘shadi. Katta loyihalarda kodni tartibli va qayta ishlatiladigan qilish uchun ishlatiladi.
 
 ---
 
-## 1. What is SCSS & Why Use It
+## 1. SCSS nima va nima uchun kerak?
 
-**SCSS** is one of the two syntaxes for **Sass** (Syntactically Awesome Stylesheets), and it extends CSS with superpowers like:
+**SCSS** — Sass ning sintaksisi; CSS bilan to‘liq mos. Siz oddiy CSS yozasiz, lekin qo‘shimcha imkoniyatlardan foydalanasiz.
 
-✅ Variables
-✅ Nesting
-✅ Reusable blocks (Mixins)
-✅ Logic & functions
-✅ Modular structure
+**Nima uchun ishlatamiz?**
 
-SCSS is 100% CSS-compatible, so you can write regular CSS and add advanced features gradually.
+| Sabab | Izoh |
+|-------|------|
+| **O‘zgaruvchilar** | Rang, shrift, o‘lchamlar bitta joyda — o‘zgartirsangiz, hamma joy yangilanadi |
+| **Nesting** | Selektorlarni HTML ierarxiyasiga o‘xshash ichma-ich yozish — kod o‘qilishi oson |
+| **Mixinlar** | Bir xil CSS bloklarini qayta ishlatish (flex, grid, media query) |
+| **Funksiyalar** | Hisob-kitoblar (px→rem, ranglarni o‘zgartirish) |
+| **Modullar** | Fayllarni bo‘lib, `@use` bilan boshqarish — katta loyihalarda zarur |
+
+**Qayerda ishlatiladi?**  
+React, Vue, Angular loyihalari, Bootstrap 5 (Sass da yozilgan), dizayn tizimlari (Design Systems), korporativ saytlar.
 
 ---
 
-## 2. SCSS Setup & Compilation
+## 2. O‘rnatish va kompilyatsiya
 
-### 🔧 Prerequisites:
-
-* [Node.js](https://nodejs.org)
-* Text editor like **VS Code**
-
-### 🧪 Install SCSS globally:
+**Talab:** [Node.js](https://nodejs.org/) o‘rnatilgan bo‘lishi.
 
 ```bash
 npm install -g sass
 ```
 
-### 🔄 Compile SCSS to CSS
-
+**Bir martalik kompilyatsiya:**
 ```bash
 sass style.scss style.css
 ```
 
-Or watch mode (auto-recompile on changes):
-
+**Kuzatish rejimi** (fayl o‘zgarganda avtomatik CSS yaratadi):
 ```bash
 sass --watch style.scss:style.css
 ```
 
----
-
-## 3. SCSS Syntax Basics
-
-SCSS syntax is **CSS + features**.
-
-```scss
-$primary: #1e90ff;
-
-body {
-  background-color: $primary;
-
-  h1 {
-    font-size: 2rem;
-    color: white;
-  }
-}
+Yoki butun papkani kuzatish:
+```bash
+sass --watch scss:css
 ```
 
-Compiles to:
-
-```css
-body {
-  background-color: #1e90ff;
-}
-body h1 {
-  font-size: 2rem;
-  color: white;
-}
-```
+**Nima uchun kerak?** Brauzer faqat CSS ni tushunadi; SCSS ni avval CSS ga aylantirish shart.
 
 ---
 
-## 4. Variables
+## 3. O‘zgaruvchilar (Variables)
 
-Define reusable values.
+**Nima:** Bir marta qiymat berasiz, keyin loyiha bo‘ylab ishlatasiz.
+
+**Nima uchun:** Rang, shrift, bo‘shliq, border-radius kabi qiymatlar bitta joyda bo‘lsa, dizyni o‘zgartirish oson; xatolik kamayadi.
+
+**Qayerda:** Dizayn tizimlari, tema (light/dark), brend ranglari.
 
 ```scss
-$font-stack: 'Segoe UI', sans-serif;
-$main-color: #333;
+$primary: #007bff;
+$font-family: 'Inter', sans-serif;
+$spacing: 8px;
+$radius: 8px;
 
-body {
-  font-family: $font-stack;
-  color: $main-color;
+.button {
+  background: $primary;
+  font-family: $font-family;
+  padding: $spacing * 2;
+  border-radius: $radius;
+}
+
+.card {
+  border-radius: $radius;
+  padding: $spacing * 3;
 }
 ```
 
+Agar `$primary` ni o‘zgartirsangiz, barcha tugmalar va linklar yangilanadi.
+
 ---
 
-## 5. Nesting
+## 4. Nesting (Ichma-ich yozuv)
 
-SCSS supports **selector nesting** like HTML hierarchy.
+**Nima:** Selektorlarni HTML tuzilmasiga o‘xshab ichma-ich yozish.
+
+**Nima uchun:** Kod qisqaroq va o‘qilishi oson; komponentga tegishli barcha stillar bir joyda.
+
+**Qayerda:** Navbar, kartochkalar, formlar — har qanday blokda.
 
 ```scss
-nav {
-  ul {
-    list-style: none;
+.nav {
+  display: flex;
+  gap: 1rem;
 
-    li {
-      display: inline-block;
+  &__link {
+    color: #333;
+    text-decoration: none;
 
-      a {
-        text-decoration: none;
-      }
+    &:hover {
+      color: $primary;
+    }
+
+    &--active {
+      font-weight: bold;
     }
   }
 }
 ```
 
-⚠️ Don’t over-nest (no more than 3 levels recommended).
+**Chiqadigan CSS:**
+- `.nav`
+- `.nav__link`
+- `.nav__link:hover`
+- `.nav__link--active`
+
+**Muhim:** Nesting 2–3 darajadan oshmasin; chuqur nesting CSS ni ortiqcha og‘ir qiladi.
 
 ---
 
-## 6. Partials and Imports (Legacy)
+## 5. Mixinlar (Qayta ishlatiladigan bloklar)
 
-Split SCSS into smaller files and use `@import` to combine them.
+**Nima:** Parametrli yoki parametrsiz kod bloki; `@include` bilan chaqiriladi.
 
-```scss
-// _variables.scss
-$bg-color: #f0f0f0;
+**Nima uchun:** Bir xil kodni takrorlamaslik (DRY). Flex center, truncate, media query kabi patternlar bir marta yoziladi.
 
-// main.scss
-@import 'variables';
-
-body {
-  background: $bg-color;
-}
-```
-
-✅ Use `_filename.scss` for partials.
-
-❗ **Note:** `@import` is deprecated. Use `@use` (see section 13).
-
----
-
-## 7. Mixins
-
-Reusable code blocks with optional parameters.
+**Qayerda:** Layout (flex, grid), responsive breakpointlar, tugma/kartochka variantlari.
 
 ```scss
-@mixin flex-center($gap: 10px) {
+@mixin flex-center($gap: 0) {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: $gap;
+  @if $gap != 0 {
+    gap: $gap;
+  }
+}
+
+@mixin truncate {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .header {
-  @include flex-center(20px);
+  @include flex-center(1rem);
+}
+
+.card__title {
+  @include truncate;
+}
+```
+
+**Responsive misol:**
+```scss
+@mixin mobile {
+  @media (max-width: 767px) {
+    @content;
+  }
+}
+
+.sidebar {
+  width: 300px;
+
+  @include mobile {
+    width: 100%;
+  }
 }
 ```
 
 ---
 
-## 8. Functions
+## 6. Funksiyalar
 
-Functions return values — use for calculations.
+**Nima:** Qiymat qaytaradigan hisob-kitoblar; stillarda ishlatiladi.
 
+**Nima uchun:** px→rem aylantirish, ranglarni o‘zgartirish (lighten/darken) — qo‘lda hisoblamaslik.
+
+**Qayerda:** Tipografiya (rem), rang palitrasi, o‘lchovlar.
+
+**O‘zingiz yozadigan funksiya:**
 ```scss
-@function px-to-rem($px) {
-  @return $px / 16 * 1rem;
+@function rem($px, $base: 16) {
+  @return $px / $base * 1rem;
 }
 
-h1 {
-  font-size: px-to-rem(24);
+h1 { font-size: rem(24); }  /* 1.5rem */
+p  { font-size: rem(16); }  /* 1rem */
+```
+
+**Sass ning o‘zi qo‘shgan rang funksiyalari:**
+```scss
+$primary: #007bff;
+
+.button {
+  background: $primary;
+
+  &:hover {
+    background: darken($primary, 10%);
+  }
+}
+
+.overlay {
+  background: rgba(#000, 0.5);
+}
+
+.badge {
+  background: lighten($primary, 35%);
+  color: darken($primary, 20%);
 }
 ```
 
+| Funksiya | Vazifasi |
+|----------|----------|
+| `lighten(rang, %)` | Rangni ochroq qilish |
+| `darken(rang, %)` | Rangni quyuqlashtirish |
+| `rgba(rang, 0–1)` | Shaffoflik (alpha) |
+| `mix(rang1, rang2, %)` | Ikki rangni aralashtirish |
+
 ---
 
-## 9. Extend/Inheritance
+## 7. @extend va placeholder (%)
 
-Avoid duplication by inheriting base styles.
+**Nima:** Bir selektor boshqa selektorning stillarini "meros" qilib oladi. `%placeholder` — faqat extend qilish uchun, o‘zi CSS da chiqmaydi.
+
+**Nima uchun:** Umumiy stillar (tugma bazasi, kartochka bazasi) bir joyda; variantlar faqat farq qiladigan qismlarni qo‘shadi.
+
+**Qayerda:** Tugma tizimlari, kartochkalar, form elementlari.
 
 ```scss
-%btn {
-  padding: 12px 20px;
-  border-radius: 6px;
-  font-weight: bold;
+%btn-base {
+  padding: 10px 20px;
+  border-radius: $radius;
+  border: none;
+  cursor: pointer;
+  font-weight: 600;
 }
 
 .btn-primary {
-  @extend %btn;
-  background: blue;
-  color: white;
+  @extend %btn-base;
+  background: $primary;
+  color: #fff;
+}
+
+.btn-secondary {
+  @extend %btn-base;
+  background: #6c757d;
+  color: #fff;
 }
 ```
 
----
-
-## 10. Conditions & Loops
-
-### 🎯 Conditions
-
-```scss
-$theme: light;
-
-body {
-  @if $theme == light {
-    background: #fff;
-  } @else {
-    background: #000;
-  }
-}
-```
-
-### 🔁 Loops
-
-```scss
-@for $i from 1 through 3 {
-  .m-#{$i} {
-    margin: #{$i}rem;
-  }
-}
-```
+**Eslatma:** Juda ko‘p joyda `@extend` ishlatilsa, CSS katta bo‘lishi mumkin. Kichik komponentlar uchun mixin ham yaxshi variant.
 
 ---
 
-## 11. Organizing SCSS Project Structure
+## 8. @use va @forward (modullar)
 
-Recommended folder structure (7–1 Pattern):
+**Nima:** `@import` o‘rniga ishlatiladigan zamonaviy usul. Har bir fayl bir marta yuklanadi, o‘zgaruvchilar/mixinlar namespace orqali mavjud.
 
-```
-scss/
-├── abstracts/   // variables, functions, mixins
-├── base/        // reset, typography
-├── components/  // buttons, cards, forms
-├── layout/      // header, footer, grid
-├── pages/       // page-specific styles
-├── themes/      // theme-specific
-├── vendors/     // third-party CSS
-└── main.scss    // imports all
-```
+**Nima uchun:** `@import` global — barcha o‘zgaruvchilar bir joyda, nomlar to‘qnashishi mumkin. `@use` modulli va xavfsiz.
 
----
-
-## 12. Real Project: SCSS Button System
+**Qayerda:** Har qanday 2+ faylli SCSS loyihasi.
 
 ```scss
 // _variables.scss
-$radius: 8px;
 $primary: #007bff;
+$radius: 8px;
 
 // _mixins.scss
-@mixin btn($bg, $color) {
-  background: $bg;
-  color: $color;
-  padding: 10px 20px;
-  border: none;
-  border-radius: $radius;
-  cursor: pointer;
+@use 'variables' as v;
+
+@mixin card {
+  padding: 1rem;
+  border-radius: v.$radius;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
 }
 
-// _buttons.scss
-.btn {
-  @include btn($primary, #fff);
+// main.scss
+@use 'variables' as v;
+@use 'mixins';
+
+.button {
+  background: v.$primary;
+  border-radius: v.$radius;
+}
+
+.card {
+  @include mixins.card;
+}
+```
+
+**@forward** — boshqa fayllarni "re-export" qilish (masalan, barcha abstractlarni bitta `_index.scss` orqali ulash):
+
+```scss
+// abstracts/_index.scss
+@forward 'variables';
+@forward 'mixins';
+@forward 'functions';
+
+// main.scss
+@use 'abstracts';
+```
+
+---
+
+## 9. Loyiha tuzilmasi (7-1 pattern)
+
+**Nima:** SCSS fayllarini vazifaga qarab papkalarga bo‘lish; bitta `main.scss` hammasini birlashtiradi.
+
+**Nima uchun:** Katta loyihada faylni topish oson, jamoa bir qoidalarga amal qiladi.
+
+**Qayerda:** 5+ sahifali saytlar, SPA, dizayn tizimlari.
+
+```
+scss/
+├── abstracts/     # variables, mixins, functions (hech narsa chiqarmaydi)
+│   ├── _variables.scss
+│   ├── _mixins.scss
+│   └── _index.scss
+├── base/          # reset, typography, global
+│   ├── _reset.scss
+│   └── _typography.scss
+├── components/    # button, card, form, input
+│   ├── _button.scss
+│   └── _card.scss
+├── layout/        # header, footer, grid
+│   ├── _header.scss
+│   └── _footer.scss
+├── pages/         # sahifaga xos (ixtiyoriy)
+├── themes/        # light/dark (ixtiyoriy)
+├── vendors/       # uchinchi tomon (Bootstrap va hokazo)
+└── main.scss      # barcha @use chaqiruqlar
+```
+
+**main.scss misoli:**
+```scss
+@use 'abstracts';
+@use 'base/reset';
+@use 'base/typography';
+@use 'components/button';
+@use 'components/card';
+@use 'layout/header';
+@use 'layout/footer';
+```
+
+---
+
+## 10. Amaliy misol: Tugma tizimi
+
+**Maqsad:** Bitta baza stil, primary/secondary/danger kabi variantlar; hover holati.
+
+```scss
+// _variables.scss
+$primary: #007bff;
+$secondary: #6c757d;
+$danger: #dc3545;
+$radius: 8px;
+
+// _mixins.scss
+@use 'variables' as v;
+
+@mixin btn($bg, $color: #fff) {
+  display: inline-block;
+  padding: 10px 20px;
+  border-radius: v.$radius;
+  border: none;
+  background: $bg;
+  color: $color;
+  cursor: pointer;
+  font-weight: 600;
+  transition: opacity 0.2s;
 
   &:hover {
     opacity: 0.9;
   }
 }
 
-// main.scss
-@use 'variables';
+// _button.scss
+@use 'variables' as v;
 @use 'mixins';
-@use 'buttons';
-```
 
----
+.btn {
+  @include mixins.btn(v.$primary);
 
-## 13. Advanced: @use and @forward
+  &--secondary {
+    @include mixins.btn(v.$secondary);
+  }
 
-`@use` replaces `@import`. It loads a file once and namespaced.
-
-```scss
-// _colors.scss
-$red: #ff0000;
-$blue: #0000ff;
-
-// main.scss
-@use 'colors';
-
-h1 {
-  color: colors.$red;
-}
-```
-
----
-
-## 14. SCSS Best Practices
-
-✅ Use `@use`, not `@import`
-✅ Keep nesting shallow (2–3 levels max)
-✅ Abstract variables and mixins
-✅ Use partials and organize by component
-✅ Avoid duplication – use `@extend` and mixins
-✅ Add comments and consistent formatting
-
----
-</details>
-
-
-
-<details>
-<summary>SCSS in Uzbek</summary>
-## 1. SCSS nima va nima uchun kerak?
-
-**SCSS (Sassy CSS)** — bu CSS’ni kengaytiruvchi **preprocessor** bo‘lib, u quyidagi imkoniyatlarni qo‘shadi:
-
-✅ O‘zgaruvchilar
-✅ Ichma-ich yozuv (nesting)
-✅ Mixinlar (qayta ishlatiladigan kodlar)
-✅ Funksiyalar
-✅ Takrorlash, shartlar
-✅ Modulli tuzilma
-
-Bu orqali kodlar **tartibli**, **tekrar yozilmaydigan**, va **oson boshqariladigan** bo‘ladi.
-
----
-
-## 2. SCSS o‘rnatish va kompilyatsiya qilish
-
-### 💻 Talab qilinadi:
-
-* [Node.js](https://nodejs.org/) o‘rnatilgan bo‘lishi
-* VS Code yoki boshqa editor
-
-### 📦 SCSS’ni o‘rnatish:
-
-```bash
-npm install -g sass
-```
-
-### 🔄 SCSS faylni CSS ga aylantirish:
-
-```bash
-sass style.scss style.css
-```
-
-Yoki kuzatish rejimi (har safar o‘zgarganda avtomatik yangilanadi):
-
-```bash
-sass --watch style.scss:style.css
-```
-
----
-
-## 3. SCSS sintaksisi – asoslar
-
-```scss
-$asosiy-rang: #1e90ff;
-
-body {
-  background-color: $asosiy-rang;
-
-  h1 {
-    font-size: 2rem;
-    color: white;
+  &--danger {
+    @include mixins.btn(v.$danger);
   }
 }
 ```
 
----
-
-## 4. O‘zgaruvchilar (Variables)
-
-```scss
-$font: 'Arial', sans-serif;
-$rang: #333;
-
-body {
-  font-family: $font;
-  color: $rang;
-}
-```
+**Natija:** `.btn`, `.btn--secondary`, `.btn--danger` — bitta mixin va o‘zgaruvchilar orqali boshqariladigan tugma tizimi.
 
 ---
 
-## 5. Ichma-ich yozuv (Nesting)
+## 11. Shartlar va tsikllar (qisqacha)
+
+**@if** — tema, muhit yoki o‘zgaruvchiga qarab stil tanlash.
 
 ```scss
-nav {
-  ul {
-    list-style: none;
+$theme: dark;
 
-    li {
-      display: inline-block;
-
-      a {
-        text-decoration: none;
-      }
-    }
-  }
-}
-```
-
-📌 Tavsiya: ichma-ich yozuvni 3 darajadan oshirmang.
-
----
-
-## 6. Fayllarni ajratish va `@import`
-
-### ➕ Fayl: `_variables.scss`
-
-```scss
-$bg: #f8f8f8;
-```
-
-### ➕ Fayl: `main.scss`
-
-```scss
-@import 'variables';
-
-body {
-  background: $bg;
-}
-```
-
-❗ Eslatma: `@import` eski usul. Yangi usul — `@use` va `@forward`.
-
----
-
-## 7. Mixinlar (Qayta ishlatiladigan kodlar)
-
-```scss
-@mixin center($gap: 10px) {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: $gap;
-}
-
-.navbar {
-  @include center(20px);
-}
-```
-
----
-
-## 8. Funksiyalar
-
-```scss
-@function rem($px) {
-  @return $px / 16 * 1rem;
-}
-
-p {
-  font-size: rem(18);
-}
-```
-
----
-
-## 9. Meros olish – `@extend`
-
-```scss
-%button {
-  padding: 10px 20px;
-  border-radius: 6px;
-}
-
-.btn-primary {
-  @extend %button;
-  background: blue;
-  color: white;
-}
-```
-
----
-
-## 10. Shartlar va Takrorlash
-
-### 🔹 `@if`
-
-```scss
-$tema: dark;
-
-body {
-  @if $tema == dark {
-    background: #000;
-    color: #fff;
+.page {
+  @if $theme == dark {
+    background: #1a1a1a;
+    color: #eee;
   } @else {
     background: #fff;
-    color: #000;
+    color: #333;
   }
 }
 ```
 
-### 🔹 `@for`
+**@for** — margin/padding klasslari yoki grid ustunlari yaratish.
 
 ```scss
-@for $i from 1 through 3 {
-  .m-#{$i} {
-    margin: #{$i}rem;
+@for $i from 1 through 4 {
+  .mt-#{$i} {
+    margin-top: #{$i}rem;
   }
 }
 ```
 
----
-
-## 11. Loyihani tashkil qilish – SCSS tuzilmasi (7-1 pattern)
-
-```
-scss/
-├── abstracts/   // mixin, function, variable
-├── base/        // normalize, base styles
-├── components/  // button, card, form
-├── layout/      // header, footer, grid
-├── pages/       // sahifalarga xos style
-├── themes/      // ranglar, night/day
-├── vendors/     // Bootstrap, FontAwesome
-└── main.scss    // asosiy fayl
-```
+Katta loyihalarda bunday klasslar ko‘pincha utility (Tailwind yoki o‘zingizning utility faylingiz) orqali boshqariladi; kerak bo‘lsagina ishlating.
 
 ---
 
-## 12. Amaliy loyiha: Tugmalar tizimi
+## 12. Eng muhim SCSS funksiyalari (qisqa jadval)
+
+| Funksiya | Vazifasi | Misol |
+|----------|----------|--------|
+| `lighten(rang, %)` | Rangni ochroq qilish | hover/background |
+| `darken(rang, %)` | Rangni quyuq qilish | border, hover |
+| `rgba(rang, alpha)` | Shaffoflik | overlay, shadow |
+| `mix(rang1, rang2, %)` | Ranglarni aralashtirish | gradient, alert |
+| `percentage(0.25)` | 0.25 → 25% | progress bar |
+| `rem($px)` (o‘zingiz yozasiz) | px → rem | tipografiya |
+
+---
+
+## 13. Yaxshi amaliyotlar
+
+| Qoida | Sabab |
+|-------|--------|
+| `@use` ishlating, `@import` dan voz keching | Modullik va namespace |
+| Nesting 2–3 darajada qoling | Selector vazni va fayl hajmi |
+| O‘zgaruvchilarni `abstracts` da saqlang | Bir joydan boshqarish |
+| Mixin — takrorlanuvchi *kod* uchun, @extend — umumiy *stil* uchun | To‘g‘ri tanlash |
+| BEM bilan birga ishlating | Klass nomlari va nesting bir-biriga mos |
+| Izoh va nomlashni izchil qiling | Jamoa va kelajakdagi o‘zingiz uchun |
+
+---
+
+## 14. BEM va SCSS
+
+**BEM** — Block, Element, Modifier. Klass nomlari: `block__element`, `block--modifier`.
+
+**SCSS da** `&` bilan qisqaroq yoziladi:
 
 ```scss
-// _variables.scss
-$btn-radius: 6px;
-$primary: #007bff;
-
-// _mixins.scss
-@mixin button($bg, $color) {
-  background: $bg;
-  color: $color;
-  padding: 10px 20px;
-  border-radius: $btn-radius;
-  border: none;
-}
-
-// _buttons.scss
-.btn {
-  @include button($primary, #fff);
-
-  &:hover {
-    opacity: 0.85;
-  }
-}
-```
-
----
-
-## 13. Yangi metod: `@use` va `@forward`
-
-### 🔹 Fayl: `_colors.scss`
-
-```scss
-$red: #ff0000;
-$blue: #0000ff;
-```
-
-### 🔹 `main.scss`
-
-```scss
-@use 'colors';
-
-h1 {
-  color: colors.$red;
-}
-```
-
----
-
-## 14. SCSS bo‘yicha eng yaxshi amaliyotlar
-
-✅ Har doim `@use` ishlating
-✅ Fayllarni modullarga bo‘ling
-✅ Nesting chuqurligini cheklang
-✅ O‘zgaruvchi va mixinlarni qayta ishlating
-✅ Kodni tartibli va izchil yozing
-
----
-</details>
-
-
-
-<details>
-<summary>SCSS funksiyalar</summary>
-
----
-
-## 🔝 5 ta eng ko‘p ishlatiladigan SCSS funksiyalar
-
----
-
-### 1️⃣ `lighten(color, amount)`
-
-> Rangni ochroq qilish uchun ishlatiladi.
-
-```scss
-$main-color: #007bff;
-
-.button {
-  background-color: lighten($main-color, 20%);
-}
-```
-
-🔹 Natija: `$main-color` 20% ga **ochroq** rangga aylantiriladi.
-
----
-
-### 2️⃣ `darken(color, amount)`
-
-> Rangni quyuqlashtirish uchun ishlatiladi.
-
-```scss
-$primary: #15a273;
-
 .card {
-  border-color: darken($primary, 15%);
-}
-```
+  padding: 1rem;
+  border-radius: $radius;
 
-🔹 Natija: `$primary` 15% ga **quyuqlashtiriladi**.
-
----
-
-### 3️⃣ `rgba(color, alpha)`
-
-> Ranggа **shaffoflik** qo‘shadi (`alpha` qiymati: 0–1 oralig‘ida)
-
-```scss
-$black: #000;
-
-.overlay {
-  background-color: rgba($black, 0.5); // 50% shaffof qora
-}
-```
-
----
-
-### 4️⃣ `mix(color1, color2, weight)`
-
-> Ikki rangni **aralashtiradi**, `weight` – birinchi rang necha foiz bo‘lishi kerakligi.
-
-```scss
-$blue: #007bff;
-$red: #ff0000;
-
-.alert {
-  background-color: mix($blue, $red, 50%);
-}
-```
-
-🔹 Natija: ko‘k va qizil teng foizda aralashtiriladi.
-
----
-
-### 5️⃣ `percentage(value)`
-
-> Decimal qiymatni **foizga aylantiradi** (masalan, `0.25` → `25%`)
-
-```scss
-$ratio: 0.4;
-
-.bar {
-  width: percentage($ratio); // 40%
-}
-```
-
----
-
-### 6 `px-to-rem($px, $base: 16)`
-
-> `px` ni `rem` ga avtomatik aylantiradi (odatda `1rem = 16px`)
-
-```scss
-@function px-to-rem($px, $base: 16) {
-  @return $px / $base * 1rem;
-}
-
-h1 {
-  font-size: px-to-rem(24); // 1.5rem
-}
-```
-
----
-
-</details>
-
-
-<details>
-<summary>BEM</summary>
-
----
-
-**BEM** — bu **CSS klass nomlarini** tartibli, o‘qilishi oson va kengaytiriladigan shaklda yozish uchun ishlab chiqilgan metodologiyadir.
-
-BEM 3 ta asosiy tarkibdan iborat:
-
-1. **Block** (blok)
-2. **Element** (element)
-3. **Modifier** (modifikator)
-
----
-
-## ✅ 1. Block (Blok) — mustaqil komponent
-
-Blok — bu mustaqil UI komponenti: **menu**, **card**, **button**, **header** va hokazo.
-
-```html
-<div class="card"></div>
-```
-
-Bu yerda `.card` — blok.
-
----
-
-## ✅ 2. Element — blok ichidagi qismlar
-
-Element — bu **blokga bog‘liq** bo‘lgan ichki qismlar. Ular **ikkita pastki chiziq `__`** bilan yoziladi.
-
-```html
-<div class="card">
-  <h2 class="card__title">Mahsulot nomi</h2>
-  <p class="card__desc">Mahsulot tavsifi</p>
-</div>
-```
-
-* `card__title` — bu `.card` blokining elementi
-* `card__desc` — ham `.card` ichidagi yana bir element
-
-❗ Element **faqat** o‘z blokiga tegishli bo‘ladi. Ya’ni `.menu__item` faqat `.menu` blokida bo‘ladi.
-
----
-
-## ✅ 3. Modifier — holat yoki ko‘rinishdagi o‘zgarish
-
-Modifier — bu blok yoki elementning **xatti-harakati yoki turini** ko‘rsatadi. U **ikki pastki chiziq va bitta tire `--`** bilan yoziladi.
-
-```html
-<button class="button button--primary">Yuborish</button>
-<button class="button button--danger">O‘chirish</button>
-```
-
-Yoki elementga modifier:
-
-```html
-<div class="card__title card__title--big">Sarlavha</div>
-```
-
----
-
-## 🎯 Amaliy misol
-
-HTML:
-
-```html
-<div class="form">
-  <label class="form__label" for="email">Email</label>
-  <input class="form__input" type="email" id="email" />
-  <button class="form__button form__button--disabled">Yuborish</button>
-</div>
-```
-
-SCSS:
-
-```scss
-.form {
-  padding: 16px;
-
-  &__label {
-    font-weight: bold;
+  &__title {
+    font-size: 1.25rem;
+    margin-bottom: 0.5rem;
   }
 
-  &__input {
-    padding: 8px;
-    border: 1px solid #ccc;
+  &__desc {
+    color: #666;
   }
 
-  &__button {
-    padding: 10px 20px;
-    background-color: blue;
-    color: white;
-
-    &--disabled {
-      background-color: gray;
-      cursor: not-allowed;
-    }
+  &--featured {
+    border: 2px solid $primary;
   }
 }
 ```
 
----
-
-## 💡 Nega BEM foydali?
-
-1. **Katta loyihalarda tartibni saqlaydi**
-2. **Kodlar modulli va qayta ishlatiladigan bo‘ladi**
-3. **Yaxshi jamoa ishlashi uchun mos**
-4. **SCSS bilan ideal ishlaydi (nesting)**
-5. **CSS chalkashib ketmaydi**
+Bu `.card`, `.card__title`, `.card__desc`, `.card--featured` beradi. BEM + SCSS — katta loyihalarda tartib va qayta foydalanish uchun juda qulay.
 
 ---
 
-## 😎 BEM bo‘yicha maslahatlar
-
-* Hech qachon elementni o‘zi alohida ishlatmang: `__title` emas, `card__title`
-* Modifier — holat, tip, rang, status kabi o‘zgaruvchilar uchun ishlatiladi
-* Block ichida boshqa block’ni joylashtirish — **boshqa blok** deb qaraladi
-
-Misol:
-
-```html
-<div class="modal">
-  <div class="modal__content">
-    <button class="button button--secondary">Yopish</button>
-  </div>
-</div>
-```
-
-Bu yerda `.button` boshqa blok, `modal` ichida ishlatilmoqda — bu to‘g‘ri.
-
----
-
-## ❌ BEMda noto‘g‘ri usullar
-
-**Yomon:**
-
-```html
-<div class="card-title"></div>
-<div class="card__desc__bold"></div>
-```
-
-**To‘g‘ri:**
-
-```html
-<div class="card__title card__title--bold"></div>
-```
-
----
-
-## 🧠 Yakuniy tavsiyalar
-
-* **Element (`__`) faqat blokga bog‘liq bo‘ladi**
-* **Modifier (`--`) holat yoki variant**
-* **Katta jamoaviy loyihalarda BEM shart**
-* **SCSSda nesting bilan birga ideal natija beradi**
-
----
-
-</details>
+**Xulosa:** SCSS ning eng kerakli qismlari — **o‘zgaruvchilar**, **nesting**, **mixinlar**, **funksiyalar** va **@use/modullar**. Ularni yaxshi o‘rganib, loyiha tuzilmasini 7-1 ga o‘xshatsangiz, professional darajadagi SCSS dan foydalana olasiz.
