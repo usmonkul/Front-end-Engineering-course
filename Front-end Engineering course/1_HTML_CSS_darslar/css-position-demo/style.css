@@ -1,0 +1,572 @@
+/* ===== CSS Position Interactive Demo ===== */
+/* Senior Front-end Engineer — Educational Tool */
+
+:root {
+  --bg: #0d1117;
+  --bg-card: #161b22;
+  --bg-code: #0d1117;
+  --accent: #58a6ff;
+  --accent-green: #3fb950;
+  --accent-orange: #d29922;
+  --text: #c9d1d9;
+  --text-muted: #8b949e;
+  --border: #30363d;
+  --danger: #f85149;
+  --font-mono: 'JetBrains Mono', 'Consolas', monospace;
+  --font-sans: 'Outfit', -apple-system, sans-serif;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: var(--font-sans);
+  background: var(--bg);
+  color: var(--text);
+  min-height: 200vh;
+  line-height: 1.6;
+}
+
+/* ===== Header ===== */
+.page-header {
+  background: linear-gradient(180deg, var(--bg-card) 0%, var(--bg) 100%);
+  border-bottom: 1px solid var(--border);
+  padding: 2rem 1.5rem;
+  text-align: center;
+}
+
+.page-header h1 {
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: var(--text);
+}
+
+.page-header p {
+  color: var(--text-muted);
+  margin-top: 0.5rem;
+}
+
+/* ===== Sandbox Section ===== */
+.sandbox-section {
+  max-width: 900px;
+  margin: 2rem auto;
+  padding: 0 1.5rem;
+}
+
+.sandbox-section h2 {
+  font-size: 1.25rem;
+  margin-bottom: 0.5rem;
+}
+
+.section-desc {
+  color: var(--text-muted);
+  font-size: 0.9rem;
+  margin-bottom: 1.5rem;
+}
+
+/* Controls */
+.controls-panel {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 1.25rem;
+  margin-bottom: 1rem;
+}
+
+.control-group {
+  margin-bottom: 1rem;
+}
+
+.control-group:last-child {
+  margin-bottom: 0;
+}
+
+.control-group > label {
+  display: block;
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 0.5rem;
+}
+
+.position-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.position-buttons button {
+  padding: 0.5rem 1rem;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  color: var(--text-muted);
+  cursor: pointer;
+  font-size: 0.85rem;
+  font-family: var(--font-mono);
+  transition: all 0.15s;
+}
+
+.position-buttons button:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+.position-buttons button.active {
+  background: rgba(88, 166, 255, 0.15);
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+/* Sliders */
+.sliders .slider-row {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 0.5rem;
+}
+
+.sliders .slider-row:last-child {
+  margin-bottom: 0;
+}
+
+.sliders label {
+  min-width: 120px;
+  font-size: 0.85rem;
+  font-family: var(--font-mono);
+}
+
+.sliders label span {
+  color: var(--accent);
+}
+
+.sliders input[type="range"] {
+  flex: 1;
+  max-width: 200px;
+  accent-color: var(--accent);
+}
+
+/* Sandbox container */
+.sandbox-container {
+  background: 
+    linear-gradient(90deg, var(--border) 1px, transparent 1px),
+    linear-gradient(var(--border) 1px, transparent 1px);
+  background-size: 24px 24px;
+  background-color: rgba(0, 0, 0, 0.3);
+  border: 2px dashed var(--border);
+  border-radius: 12px;
+  min-height: 280px;
+  padding: 1rem;
+  margin-bottom: 1rem;
+}
+
+.sandbox-parent {
+  position: relative;
+  width: 100%;
+  min-height: 240px;
+  padding: 1rem;
+}
+
+.sandbox-sibling {
+  display: inline-block;
+  padding: 0.5rem 1rem;
+  background: rgba(88, 166, 255, 0.2);
+  border: 1px solid rgba(88, 166, 255, 0.5);
+  border-radius: 8px;
+  font-size: 0.8rem;
+  color: var(--accent);
+  margin: 0.25rem;
+}
+
+.sandbox-target {
+  position: static;
+  display: inline-block;
+  width: 130px;
+  min-height: 70px;
+  background: var(--accent-green);
+  color: var(--bg);
+  border-radius: 10px;
+  padding: 0.75rem 1rem;
+  font-weight: 600;
+  font-size: 0.85rem;
+  transition: all 0.2s ease;
+  margin: 0.25rem;
+}
+
+.target-label {
+  display: block;
+}
+
+/* Code output */
+.code-output {
+  background: var(--bg-code);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 1rem 1.25rem;
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+  overflow-x: auto;
+}
+
+.code-label {
+  color: var(--text-muted);
+  font-size: 0.75rem;
+  display: block;
+  margin-bottom: 0.5rem;
+}
+
+.code-output pre {
+  margin: 0;
+}
+
+.code-output code {
+  color: var(--accent);
+}
+
+/* ===== Real-life Examples ===== */
+.examples-section {
+  max-width: 900px;
+  margin: 3rem auto;
+  padding: 0 1.5rem 4rem;
+}
+
+.examples-section h2 {
+  font-size: 1.25rem;
+  margin-bottom: 0.5rem;
+}
+
+.examples-section .section-desc {
+  margin-bottom: 1.5rem;
+}
+
+.examples-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1.5rem;
+}
+
+.example-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  overflow: hidden;
+  transition: border-color 0.2s;
+}
+
+.example-card:hover {
+  border-color: var(--accent);
+}
+
+.example-card h3 {
+  font-size: 1rem;
+  padding: 1rem 1rem 0.5rem;
+}
+
+.example-desc {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  padding: 0 1rem 1rem;
+  margin-bottom: 0.5rem;
+  line-height: 1.5;
+}
+
+.demo-area {
+  padding: 1rem;
+  min-height: 120px;
+}
+
+/* Product card + badge */
+.product-card {
+  position: relative;
+  background: linear-gradient(145deg, #21262d, #161b22);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 1rem;
+  max-width: 200px;
+}
+
+.product-card .badge {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  background: var(--danger);
+  color: white;
+  padding: 0.2rem 0.5rem;
+  border-radius: 4px;
+  font-size: 0.7rem;
+  font-weight: 600;
+}
+
+.product-image {
+  font-size: 2.5rem;
+  text-align: center;
+  margin-bottom: 0.5rem;
+}
+
+.product-card h4 {
+  font-size: 0.95rem;
+  margin-bottom: 0.25rem;
+}
+
+.product-card p {
+  font-size: 0.9rem;
+  color: var(--accent-green);
+  font-weight: 600;
+}
+
+/* Fixed nav demo */
+.fixed-demo {
+  position: relative;
+  min-height: 180px;
+}
+
+.fixed-nav-demo {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  background: var(--bg-card);
+  border-bottom: 1px solid var(--border);
+  padding: 0.75rem 1.5rem;
+  display: flex;
+  gap: 1.5rem;
+  z-index: 50;
+}
+
+.fixed-nav-demo a {
+  color: var(--text);
+  text-decoration: none;
+  font-size: 0.9rem;
+}
+
+.fixed-nav-demo a:hover {
+  color: var(--accent);
+}
+
+.scroll-placeholder {
+  padding-top: 3rem;
+  color: var(--text-muted);
+  font-size: 0.9rem;
+}
+
+.scroll-placeholder p {
+  animation: pulse 2s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  50% { opacity: 0.6; }
+}
+
+/* Modal */
+.modal-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.75);
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.modal-overlay.visible {
+  display: flex;
+}
+
+.modal-content {
+  position: relative;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 1.5rem;
+  max-width: 340px;
+  width: 90%;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+}
+
+.modal-content h4 {
+  margin-bottom: 0.75rem;
+}
+
+.modal-content p {
+  font-size: 0.9rem;
+  color: var(--text-muted);
+  margin-bottom: 1rem;
+}
+
+.open-modal-btn {
+  padding: 0.5rem 1rem;
+  background: var(--accent);
+  color: var(--bg);
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+
+.open-modal-btn:hover {
+  opacity: 0.9;
+}
+
+.close-modal-btn {
+  padding: 0.5rem 1rem;
+  background: var(--border);
+  color: var(--text);
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 0.85rem;
+}
+
+.close-modal-btn:hover {
+  background: var(--text-muted);
+}
+
+/* Sticky table */
+.sticky-demo {
+  max-height: 200px;
+  overflow-y: auto;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+}
+
+.sticky-table-wrapper {
+  min-width: 100%;
+}
+
+.sticky-demo-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.85rem;
+}
+
+.sticky-demo-table th,
+.sticky-demo-table td {
+  padding: 0.6rem 1rem;
+  text-align: left;
+  border-bottom: 1px solid var(--border);
+}
+
+.sticky-demo-table thead th {
+  position: sticky;
+  top: 0;
+  background: var(--accent);
+  color: var(--bg);
+  font-weight: 600;
+}
+
+.sticky-demo-table tbody tr:hover {
+  background: rgba(255, 255, 255, 0.03);
+}
+
+/* Dropdown */
+.dropdown-demo {
+  position: relative;
+  display: inline-block;
+}
+
+.dropdown-trigger {
+  padding: 0.5rem 1rem;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  color: var(--text);
+  cursor: pointer;
+  font-size: 0.9rem;
+}
+
+.dropdown-trigger:hover {
+  border-color: var(--accent);
+}
+
+.dropdown-menu {
+  display: none;
+  position: absolute;
+  top: 100%;
+  left: 0;
+  margin-top: 0.25rem;
+  min-width: 160px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  list-style: none;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+  z-index: 10;
+}
+
+.dropdown-menu.open {
+  display: block;
+}
+
+.dropdown-menu li a {
+  display: block;
+  padding: 0.6rem 1rem;
+  color: var(--text);
+  text-decoration: none;
+  font-size: 0.9rem;
+}
+
+.dropdown-menu li a:hover {
+  background: rgba(88, 166, 255, 0.15);
+  color: var(--accent);
+}
+
+/* Scroll dummy */
+.scroll-dummy {
+  padding: 1rem;
+  background: rgba(88, 166, 255, 0.1);
+  border: 1px dashed var(--border);
+  border-radius: 8px;
+  color: var(--text-muted);
+  font-size: 0.9rem;
+  text-align: center;
+}
+
+/* Scroll to top button (fixed) */
+.scroll-top-btn {
+  position: fixed;
+  bottom: 2rem;
+  right: 2rem;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: var(--accent);
+  color: var(--bg);
+  border: none;
+  cursor: pointer;
+  font-size: 1.25rem;
+  font-weight: bold;
+  box-shadow: 0 4px 16px rgba(88, 166, 255, 0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(10px);
+  transition: all 0.3s ease;
+  z-index: 100;
+}
+
+.scroll-top-btn.visible {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}
+
+.scroll-top-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(88, 166, 255, 0.5);
+}
+
+/* Footer */
+.page-footer {
+  text-align: center;
+  padding: 2rem;
+  color: var(--text-muted);
+  font-size: 0.85rem;
+  border-top: 1px solid var(--border);
+}

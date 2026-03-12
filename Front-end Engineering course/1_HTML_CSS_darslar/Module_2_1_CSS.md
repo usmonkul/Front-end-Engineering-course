@@ -752,7 +752,7 @@ Agar siz theme switching yoki JavaScript bilan stilni boshqarishni xohlasangiz, 
 
 ---
 
-# CSS Positioning: Relative, Absolute, Fixed
+# CSS Positioning: Relative, Absolute, Fixed, Sticky
 
 ---
 
@@ -766,13 +766,13 @@ CSS’da **position** xossasi elementni sahifadagi joylashuvini aniqlash uchun i
 
 ## CSS Position turlari
 
-| Tur | Tavsifi |
-|:--|:--|
-| static | Standart holat, oqimga mos ravishda joylashadi (default) |
-| relative | O‘z joyiga nisbatan siljiydi |
-| absolute | Eng yaqin `position: relative` yoki `absolute` qilingan elementga nisbatan joylashadi |
-| fixed | Brauzer oynasiga nisbatan qat'iy joylashadi (scroll qilinsa ham harakat qilmaydi) |
-| sticky | Ma’lum scroll chegarasidan keyin fixed bo‘lib qoladi (keyinchalik ko‘rib chiqamiz) |
+| Tur | Tavsifi | Document flow |
+|:--|:--|:--|
+| static | Standart holat, oqimga mos (default) | Oqimda qoladi |
+| relative | O‘z joyiga nisbatan siljiydi | Oqimda qoladi (joyni saqlaydi) |
+| absolute | Eng yaqin **containing block**ga nisbatan joylashadi | Oqimdan chiqadi |
+| fixed | Brauzer oynasiga (viewport) nisbatan joylashadi | Oqimdan chiqadi |
+| sticky | Scroll chegarasida fixed bo‘lib qoladi | Oqimda, keyin fixed |
 
 ---
 
@@ -801,59 +801,99 @@ Element o‘zining odatiy joyidan **nisbatan** ko‘chiriladi.
 }
 ```
 
+**Muhim:** Relative element hali ham **document flow**da qoladi — ya'ni `top`/`left` berilsa ham uning joyi bo‘sh qolmaydi. Boshqa elementlar uning "asl joyi"ni egallaydi, faqat ko‘rinishi siljiydi.
+
 **Tushuntirish:**
-- Element asl joyida qoladi.
-- `top`, `left`, `right`, `bottom` orqali joyidan nisbiy siljiydi.
-- Boshqa elementlarga ta'sir qilmaydi.
+- Element asl joyida **joy olgani** saqlanadi (bo‘sh qolmaydi).
+- `top`, `left`, `right`, `bottom` orqali **vizual** jihatdan siljiydi.
+- Boshqa elementlarga joylashuv ta'sir qilmaydi.
+
+**Ko‘rish uchun diagramma:**
+```
+[ Element 1 ]  [ Box: relative, top:20px ]  [ Element 2 ]
+                     ↓ siljidi
+              [ Box ko‘rinishi ]
+```
 
 **Amaliy misol:**
 
 ```html
-<div style="position: relative; top: 10px; left: 15px; background: lightblue;">
+<div class="box" style="position: relative; top: 10px; left: 15px; background: lightblue;">
   Men nisbatan ko‘chirildim
 </div>
 ```
+
+**Qayerda ishlatiladi:** Badge, ikonka joylashishi, z-index uchun "ota" yaratish (absolute bola uchun).
 
 ---
 
 ## 3. Absolute
 
-Element **oqimdan chiqariladi** va eng yaqin `position: relative`, `absolute` yoki `fixed` qilingan ota-elementga nisbatan joylashadi.
+Element **document flowdan chiqariladi** — boshqa elementlar uning joyini egallamasligini hisobga olmaydi, lekin u ular bilan ustma-ust tushishi mumkin.
 
-```css
-.child {
-  position: absolute;
-  top: 50px;
-  left: 100px;
-}
+**Containing block (o‘ram blok):** `absolute` element eng yaqin **positioned ancestor** (ota-element) ga nisbatan joylashadi — ya'ni `position: relative`, `absolute`, `fixed` yoki `sticky` bo‘lgan element.
+
+> ⚠️ **Eslatma:** `transform`, `filter` yoki `perspective` qo‘llangan ota-element ham yangi containing block yaratadi — bu ko‘pincha kutilmagan natija beradi.
+
+```
+┌─────────────────────────────┐
+│  Ota (position: relative)  │
+│  ┌───────────────────────┐  │
+│  │ absolute child        │  │  ← top, left ga nisbatan
+│  └───────────────────────┘  │
+└─────────────────────────────┘
 ```
 
-Agar ota-elementda `position: relative` bo‘lsa, absolute element unga nisbatan joylashadi.  
-Agar bo‘lmasa, butun sahifaga (`<html>`) nisbatan hisoblanadi.
-
-**Amaliy misol:**
+**Amaliy misol — yuqori chap burchakdagi badge:**
 
 ```html
-<div style="position: relative; width: 400px; height: 300px; background: lightgray;">
-  <div style="position: absolute; top: 20px; left: 20px; width: 100px; height: 100px; background: coral;">
-    Ichki box
-  </div>
+<div class="card" style="position: relative;">
+  <span class="badge" style="position: absolute; top: 10px; right: 10px;">Yangi</span>
+  Mahsulot kartochkasi
 </div>
 ```
 
-**Tushuntirish:**
-- Ichki box tashqi box ichida aniq joylashtirilgan.
+### Absolute orqali markazlashtirish (modal, overlay)
+
+Bu eng keng qo‘llanadigan pattern — elementni ota-element ichida markazga joylashtirish:
+
+```css
+.modal {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+```
+
+`top: 50%` va `left: 50%` — elementning yuqori chap burchagini markazga olib keladi.  
+`transform: translate(-50%, -50%)` — o‘z o‘lchamining yarmiga ortga siljitib, haqiqiy markazga qo‘yadi.
+
+### `left` + `right` va `top` + `bottom` birgalikda
+
+Ikkalasini ham bersangiz, element **cho‘ziladi** — bu to‘liq overlay uchun qulay:
+
+```css
+.overlay {
+  position: absolute;
+  inset: 0;  /* top: 0; right: 0; bottom: 0; left: 0; */
+}
+```
+
+Element ota-elementni to‘liq qoplaydi.
 
 ---
 
 ## 4. Fixed
 
-Element **brauzer oynasiga** nisbatan joylashadi va scroll qilganda ham o‘z joyini o‘zgartirmaydi.
+Element **brauzer oynasiga** (viewport) nisbatan joylashadi va scroll qilganda ham o‘z joyini o‘zgartirmaydi.
 
 ```css
 nav {
   position: fixed;
   top: 0;
+  left: 0;
+  right: 0;
   width: 100%;
   background-color: #333;
   color: white;
@@ -869,7 +909,33 @@ nav {
 ```
 
 - Har doim ekranning yuqorisida ko‘rinib turadi.
-- Foydalanuvchi sahifani pastga scroll qilganda ham navigatsiya yo‘qolmaydi.
+- Sahifa pastga scroll qilganda ham navigatsiya yo‘qolmaydi.
+
+> ⚠️ **Gotcha:** Agar ota-elementda `transform`, `filter` yoki `perspective` bo‘lsa, `fixed` element viewportga emas, shu ota-elementga nisbatan joylashadi — `absolute` kabi ishlaydi.
+
+**Qayerda ishlatiladi:** Fixed header/footer, "yuqoriga" tugmasi, modal, cookie banner.
+
+---
+
+## 5. Sticky
+
+Element avval **oqimda** joylashadi, scroll ma’lum chegaraga yetganda **fixed** bo‘lib qoladi.
+
+```css
+.sticky-header {
+  position: sticky;
+  top: 0;
+  background: white;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+```
+
+**Qanday ishlaydi:**
+- `top: 0` — element viewport tepasiga yetganda joylashadi.
+- O‘z ota-elementi (masalan, `<section>`) ekrandan chiqib ketguncha sticky bo‘lib turadi.
+- Ota-element scroll dan chiqsa, element ham birga ketadi.
+
+**Qayerda ishlatiladi:** Jadval sarlavhalari, sticky sidebar, sticky filter paneli.
 
 ---
 
@@ -882,11 +948,13 @@ Position berilgandan so‘ng ushbu xossalar bilan elementni harakatlantiramiz:
 - `right: 10px` — o‘ngdan 10px chapga suriladi
 - `bottom: 30px` — pastdan 30px tepaga ko‘tariladi
 
+**Pro tip:** `left` va `right` **ikkalasini** bersangiz, element gorizontal cho‘ziladi. `top` va `bottom` — vertikal. `inset: 0` — hammasi nol (to‘liq overlay).
+
 ---
 
-## Position Priority
+## z-index — ustma-ust joylashuv
 
-`position: absolute` va `position: fixed` bilan ishlaganda **z-index** xossasi ham muhim.
+`position: absolute`, `fixed` yoki `sticky` berilganda **z-index** elementlarning ustma-ust tartibini belgilaydi. Raqam kattaroq bo‘lsa, element yuqorida ko‘rinadi.
 
 ```css
 .modal {
@@ -895,26 +963,48 @@ Position berilgandan so‘ng ushbu xossalar bilan elementni harakatlantiramiz:
 }
 ```
 
-`z-index` — elementlarning ustma-ust joylashuv tartibini belgilaydi. Raqam qanchalik katta bo‘lsa, element shunchalik yuqorida ko‘rinadi.
+> ⚠️ **Muhim:** `z-index` faqat `position` static **bo‘lmagan** elementlarda ishlaydi. `position: static` (default) da z-index hech narsa qilmaydi.
+
+---
+
+## Real loyihalarda qo‘llanilishi
+
+| Vaziyat | Position |
+|:--|:--|
+| Kartochka ustidagi "Yangi" badge | `relative` (ota) + `absolute` (badge) |
+| Dropdown menyu | `relative` (tugma) + `absolute` (menyu) |
+| Modal, overlay | `fixed` + `z-index` |
+| Yuqoriga qotib turadigan header | `sticky` |
+| Yuqoriga scroll tugmasi | `fixed` |
+| Cookie banner | `fixed` |
+
+---
+
+## Troubleshooting — "nima uchun ishlamayapti?"
+
+| Muammo | Sabab | Yechim |
+|:--|:--|:--|
+| Absolute element sahifaga nisbatan joylashyapti | Ota-elementda positioning yo‘q | Ota-elementga `position: relative` qo‘shing |
+| z-index ishlamayapti | Element `position: static` | `position: relative` yoki boshqa positioned qiymat bering |
+| Fixed scroll bilan birga harakatlanadi | Ota-elementda `transform`/`filter` bor | Transformni boshqa elementga ko‘chiring yoki fixed ni boshqa joyda ishlating |
 
 ---
 
 ## Amaliy Mashg‘ulot
 
-- HTML sahifada:
-  - Bir `<div>` yarating va unga `position: relative` bering.
-  - Ichida yana bir `<div>` yarating va unga `position: absolute` bering (masalan, yuqori chap burchakka joylashtiring).
-  - Saytga navigatsiya (`<nav>`) qo‘shing va `position: fixed` bilan yuqoriga joylashtiring.
+1. **Relative + Absolute:** Mahsulot kartochkasi yarating — ota divga `position: relative`, ichida yuqori o‘ng burchakda "Yangi" badge (`position: absolute; top: 10px; right: 10px`).
+2. **Fixed:** `<nav>` qo‘shing va `position: fixed; top: 0; left: 0; right: 0` bilan yuqoriga joylashtiring — scroll qilganda ham ko‘rinsin.
+3. **Centering:** Modal oyna yarating — `position: fixed` + `inset: 0` overlay, ichida `position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%)` bilan markazda matn.
 
 ---
 
 ## Uyga Vazifa
 
-- Mini loyiha:  
-  - Header (`fixed` navigatsiya)
-  - Asosiy qism (`relative` elementlar bilan)
-  - Ichida popup (modal) yarating (`absolute` va `z-index` bilan).
-- Faqat CSS va HTML ishlating.
+**Mini loyiha (faqat HTML + CSS):**
+
+- **Fixed** navigatsiya — yuqorida, scrollda ham qotib turadi.
+- **Asosiy qism** — kamida 2 ta kartochka, har birida `relative` ota va `absolute` badge (masalan, "Chegirma", "Yangi").
+- **Modal** — biror tugma bosilganda (yoki boshlang‘ichda) overlay + markazdagi oyna. `z-index` bilan boshqa elementlardan yuqorida ko‘rinsin.
 
 ---
 

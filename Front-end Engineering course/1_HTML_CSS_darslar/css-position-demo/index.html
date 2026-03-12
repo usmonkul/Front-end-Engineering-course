@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CSS Position — Interaktiv Demo</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Outfit:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+  <header class="page-header">
+    <h1>CSS Position — Interaktiv O‘rganish</h1>
+    <p>Position turlarini o‘zgartiring va natijani real vaqtda kuzating</p>
+  </header>
+
+  <!-- Interactive Sandbox -->
+  <section class="sandbox-section">
+    <h2>🎮 Interaktiv Sandbox</h2>
+    <p class="section-desc">Quyidagi elementni turli position qiymatlari bilan sinab ko‘ring. Sliderlar orqali top, left, right, bottom o‘zgartiring.</p>
+
+    <div class="controls-panel">
+      <div class="control-group">
+        <label>Position turi</label>
+        <div class="position-buttons">
+          <button data-position="static" class="active">static</button>
+          <button data-position="relative">relative</button>
+          <button data-position="absolute">absolute</button>
+          <button data-position="fixed">fixed</button>
+          <button data-position="sticky">sticky</button>
+        </div>
+      </div>
+
+      <div class="control-group sliders">
+        <div class="slider-row">
+          <label>top: <span id="top-value">0</span>px</label>
+          <input type="range" id="top-slider" min="-100" max="200" value="0">
+        </div>
+        <div class="slider-row">
+          <label>left: <span id="left-value">0</span>px</label>
+          <input type="range" id="left-slider" min="-100" max="400" value="0">
+        </div>
+        <div class="slider-row">
+          <label>right: <span id="right-value">auto</span></label>
+          <input type="range" id="right-slider" min="-100" max="400" value="-1" disabled>
+        </div>
+        <div class="slider-row">
+          <label>bottom: <span id="bottom-value">auto</span></label>
+          <input type="range" id="bottom-slider" min="-100" max="200" value="-1" disabled>
+        </div>
+      </div>
+    </div>
+
+    <div class="sandbox-container" id="sandbox">
+      <div class="sandbox-parent">
+        <div class="sandbox-sibling">Element 1 (oqimda)</div>
+        <div class="sandbox-target" id="target-element">
+          <span class="target-label">Men target element</span>
+        </div>
+        <div class="sandbox-sibling">Element 2 (oqimda)</div>
+      </div>
+    </div>
+
+    <div class="code-output">
+      <span class="code-label">Hozirgi CSS:</span>
+      <pre id="code-display"><code id="code-content"></code></pre>
+    </div>
+  </section>
+
+  <!-- Real-life Examples -->
+  <section class="examples-section">
+    <h2>🌟 Real Hayotdagi Misollar</h2>
+    <p class="section-desc">Quyidagi komponentlar position qanday ishlatilishini ko‘rsatadi.</p>
+
+    <div class="examples-grid">
+      <!-- Example 1: Card with Badge (relative + absolute) -->
+      <article class="example-card">
+        <h3>1. Mahsulot kartochkasi + Badge</h3>
+        <p class="example-desc">relative (ota) + absolute (badge) — kartochka ustidagi "Yangi" yorliq</p>
+        <div class="demo-area">
+          <div class="product-card">
+            <span class="badge">Yangi</span>
+            <div class="product-image">📱</div>
+            <h4>Smartfon Pro 15</h4>
+            <p>4 990 000 so‘m</p>
+          </div>
+        </div>
+      </article>
+
+      <!-- Example 2: Fixed Navbar -->
+      <article class="example-card">
+        <h3>2. Fixed navigatsiya</h3>
+        <p class="example-desc">position: fixed — scroll qilganda ham yuqorida qotib turadi</p>
+        <div class="demo-area fixed-demo">
+          <nav class="fixed-nav-demo">
+            <a href="#">Bosh sahifa</a>
+            <a href="#">Mahsulotlar</a>
+            <a href="#">Kontakt</a>
+          </nav>
+          <div class="scroll-placeholder">
+            <p>← Pastga scroll qiling — navigatsiya yuqorida qoladi</p>
+          </div>
+        </div>
+      </article>
+
+      <!-- Example 3: Modal (fixed + z-index) -->
+      <article class="example-card">
+        <h3>3. Modal oyna</h3>
+        <p class="example-desc">fixed overlay + absolute markazlashtirish — popup oynalar</p>
+        <div class="demo-area">
+          <button class="open-modal-btn" id="open-modal">Modalni ochish</button>
+          <div class="modal-overlay" id="modal-overlay">
+            <div class="modal-content">
+              <h4>Xush kelibsiz!</h4>
+              <p>Bu modal oyna fixed overlay va markazda absolute joylashgan content bilan yaratilgan.</p>
+              <button class="close-modal-btn" id="close-modal">Yopish</button>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <!-- Example 4: Sticky header -->
+      <article class="example-card">
+        <h3>4. Sticky sarlavha</h3>
+        <p class="example-desc">position: sticky — scroll da ma'lum nuqtada qotib qoladi</p>
+        <div class="demo-area sticky-demo">
+          <div class="sticky-table-wrapper">
+            <table class="sticky-demo-table">
+              <thead>
+                <tr>
+                  <th>Mahsulot</th>
+                  <th>Narxi</th>
+                  <th>Holat</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr><td>Laptop</td><td>12M so‘m</td><td>Mavjud</td></tr>
+                <tr><td>Telefon</td><td>5M so‘m</td><td>Mavjud</td></tr>
+                <tr><td>Planshet</td><td>7M so‘m</td><td>Qolmagan</td></tr>
+                <tr><td>Naushnik</td><td>800K so‘m</td><td>Mavjud</td></tr>
+                <tr><td>Klaviatura</td><td>500K so‘m</td><td>Mavjud</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </article>
+
+      <!-- Example 5: Dropdown (relative + absolute) -->
+      <article class="example-card">
+        <h3>5. Dropdown menyu</h3>
+        <p class="example-desc">relative (tugma) + absolute (menyu) — tugma ostida ochiladigan menyu</p>
+        <div class="demo-area">
+          <div class="dropdown-demo">
+            <button class="dropdown-trigger" id="dropdown-trigger">
+              Menyuni ochish ▾
+            </button>
+            <ul class="dropdown-menu" id="dropdown-menu">
+              <li><a href="#">Profil</a></li>
+              <li><a href="#">Sozlamalar</a></li>
+              <li><a href="#">Chiqish</a></li>
+            </ul>
+          </div>
+        </div>
+      </article>
+
+      <!-- Example 6: Scroll to top (fixed) -->
+      <article class="example-card">
+        <h3>6. "Yuqoriga" tugmasi</h3>
+        <p class="example-desc">position: fixed — ekranning pastki o‘ng burchagida har doim ko‘rinadi</p>
+        <div class="demo-area">
+          <div class="scroll-dummy">Sahifa pastki qismiga yetganda tugma paydo bo‘ladi ↓</div>
+        </div>
+      </article>
+    </div>
+  </section>
+
+  <!-- Scroll to top button (real fixed example) -->
+  <button class="scroll-top-btn" id="scroll-top" aria-label="Yuqoriga scroll">↑</button>
+
+  <footer class="page-footer">
+    <p>CSS Position — Front-end Engineering Course Demo</p>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
